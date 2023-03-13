@@ -137,7 +137,7 @@ button{
 #ajaune { grid-column: 1;grid-row: 3;color:yellow;}
 
 /*.   boutons de choix des modes.    */
-#bdhms{grid-column: 1;grid-row: 4;} /* bouton jaune */
+#bj{grid-column: 1;grid-row: 4;} /* bouton jaune */
 #bdeg{grid-column: 2;grid-row: 4;} /* bouton deg rad */ 
 #bfix{grid-column: 3;grid-row: 4;} /* bouton fix sci */ 
 #bdplus{ grid-column: 4;grid-row: 4;}

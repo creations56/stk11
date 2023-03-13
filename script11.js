@@ -17,7 +17,6 @@ let titreBouton='',
   pile1=0, // valeurs numerique pile et mem
   pile2=0, // valeurs numerique pile et mem
   mem=0, // valeurs numerique pile et mem
-  r=0; // resultat pour calcul de fonctions
   Vfixsci='FIX', // mode d'affichage
   decimales=2 ,
   Vdegrad='DEG',
@@ -25,21 +24,15 @@ let titreBouton='',
   posentree='vide', // entree d'un nouveau nombre
   entree='',// affichage de l'entree
   listWarning=['SCI','erreur','erreur','!'], // liste des message d'erreur
-  zaff="", // affichage des valeurs pile et mem
-  clicBjaune=false, // indicateur appui sur touche jaune
+  zaff=""; // affichage des valeurs pile et mem
+let clicBjaune=false;// indicateur appui sur touche jaune
   
   
 // ----------------------------------------------------------
 // pour lecture et modification des affichages et des boutons
 // ----------------------------------------------------------
 
-docAjaune=document.getElementById("ajaune")
-docAstk=document.getElementById("astk")
-docAinfo = document.getElementById('ainfo'); 
-docAmem = document.getElementById('amem'); 
-docAdegrad = document.getElementById('adegrad'); 
-docAfixsci = document.getElementById('afixsci'); 
-docAdplusmoins = document.getElementById('adplusmoins'); 
+
 
 document.querySelectorAll('.bblanc').forEach(item => {
   item.addEventListener('click', event => {    
@@ -52,7 +45,7 @@ document.querySelectorAll('.bblanc').forEach(item => {
 document.querySelectorAll('.bgris').forEach(item => {
   item.addEventListener('click', event => {    
     const {target} = event;
-	titreBouton=target.textContent;
+	titreBouton=target.id;
 	boutonGris(titreBouton);
   })
 });
@@ -68,33 +61,35 @@ document.querySelectorAll('.bbleu').forEach(item => {
 document.querySelectorAll('.bjaune').forEach(item => {
   item.addEventListener('click', event => {    
     const {target} = event;
-	titreBouton=target.textContent;
+	titreBouton=target.id;
 	boutonJaune(titreBouton);
   })
 });
+
+docAjaune=document.getElementById("ajaune")
+docAstk=document.getElementById("astk")
+docAinfo = document.getElementById('ainfo'); 
+docAmem = document.getElementById('amem'); 
+docAdegrad = document.getElementById('adegrad'); 
+docAfixsci = document.getElementById('afixsci'); 
+docAdplusmoins = document.getElementById('adplusmoins'); 
 
 // ----------------------------------------------------------
 //              fonctions d'affichage et gestion
 // ----------------------------------------------------------
 
 
-function affichageInfo(){
+function affichageInfo() {
   // mise a jour affichage infos modes 
   docAdegrad.textContent=Vdegrad;
   docAfixsci.textContent=Vfixsci;
   docAdplusmoins.textContent=decimales;
-  if (warning!==''){
-    docAinfo.textContent=warning;
-    warning='';
-  } 
-  else{
-    docAinfo.textContent="";
-  }
+  docAinfo.textContent=warning;
+  if (warning!==''){warning=''} // raz warning apres affichage
   // affichage du mode touche jaune
-  if (clicBjaune) {docAjaune.textContent="\u25EF";} 
-  else {docAjaune.textContent="";};
+  if (clicBjaune===true) {docAjaune.textContent="\u25EF";} 
+  else {docAjaune.textContent="";} 
 }
-
 
 function affichagePile(){ 
   // passage en SCI necessaire ?
@@ -105,19 +100,21 @@ function affichagePile(){
   lmax=Math.max(l0,l1,l2,lmem);
   if ((Vfixsci==='FIX')&&(lmax>16)) {Vfixsci='SCI';warning=listWarning[0]}
   
+  // mise a jour affichage pile et mem
   if (Vfixsci==='FIX'){
-    zaff=mem.toFixed(decimales)+"\n"+pile2.toFixed(decimales)+"\n"+pile1.toFixed(decimales)+"\n"+pile0.toFixed(decimales);
-    docAmem.textContent=zaff; 
+    zaff=mem.toFixed(decimales)+"\n"+pile2.toFixed(decimales)+"\n"+pile1.toFixed(decimales)+"\n"+pile0.toFixed(decimales);  
   }
   else{
     zaff=mem.toExponential(decimales)+"\n"+pile2.toExponential(decimales)+"\n"+pile1.toExponential(decimales)+"\n"+pile0.toExponential(decimales);
-    docAmem.textContent=zaff;
   }
-  affichageInfo();// si mode SCI FIX modifie 
+  docAmem.textContent=zaff;
+  
+  // mise a jour affichage infos modes 
+  affichageInfo();
 }
 
 function affichageInput(z){
-  // afficha de x en mode entree
+  // affichage de x en mode entree
   if (z===''){fDown();affichagePile()} // si entree '' sortie mode entree
   else {
   l0=pile0.toFixed(decimales).length;// eval longueur max affichage
@@ -184,8 +181,8 @@ function fDown(){
 
 function fEnter(){ 
   // si entree = '' la touche ENTER est inactive
-  if (entree!==''){ pile0=parseFloat(entree);entree='';}
-  else {return}
+  if (entree!==''){pile0=parseFloat(entree);entree='';}
+  //else {return}
 }
 
 // ----------------------------------------------------------
@@ -274,25 +271,30 @@ function boutonBlanc(x) {
  
 function boutonGris(x){
   // gestion des boutons gris, gestion pile et autres
-  //alert(x+" , "+clicBjaune)
-  let flagR=true; // affichageResults
-  let r=0;
-  if (x==='ENTER'){fEnter();flagR=false};// fEnter affiche deja results
-  if (x==='PI'){fEnter();fUp();pile0=Math.PI}
-  if (x==='DROP'){fDown()}
-  if (x==='DUP'){fUp();pile0=pile1}
-  if (x==='STORCL' && clicBjaune===false){fEnter();mem=pile0}
-  if (x==='STORCL' && clicBjaune===true){fEnter();fUp();pile0=mem}
-  if (x==='SWAP'){r=pile0;pile0=pile1;pile1=r}
-  if (x==='CSTK'){pile0=0;pile1=0;pile2=0;mem=0} 
-  if (x==='DEGRAD' && clicBjaune===false){Vdegrad='DEG'} 
-  if (x==='DEGRAD' && clicBjaune===true){Vdegrad='RAD'} 
-  if (x==='FIXSCI' && clicBjaune===false){Vfixsci='FIX';flagR=false} 
-  if (x==='FIXSCI' && clicBjaune===true){Vfixsci='SCI';flagR=false} 
-  if (x==='D+'){if (decimales<8){decimales +=1};flagR=false} 
-  if (x==='D-'){if (decimales>0){decimales -=1};flagR=false} 
-  if (x==='CRST'){listOpe=[]} 
-  if (x==='CHS'){fEnter();pile0=-pile0}
+  warning=x;
+  
+  var r=0;// variable locale pour calculs
+  
+  if (clicBjaune===false) { // partie haute du bouton
+    if (x==='bswap'){r=pile0;pile0=pile1;pile1=r}
+    if (x==='bdup'){fUp();pile0=pile1}
+    if (x==='bsto'){fEnter();mem=pile0}
+    if (x==='ddeg'){Vdegrad='DEG'} 
+    if (x==='bfix'){Vfixsci='FIX'} 
+  }
+  else { // partie basse du bouton
+    if (x==='bswap'){fDown()} // drop
+    if (x==='bdup'){fEnter();pile0=-pile0} // chs
+    if (x==='bsto'){fEnter();fUp();pile0=mem} //rcl 
+    if (x==='bdeg'){Vdegrad='RAD'} // rad
+    if (x==='bfix'){Vfixsci='SCI'} // sci
+  }
+  
+  if (x==='benter'){fEnter()};// fEnter affiche deja results
+  if (x==='bpi'){fEnter();fUp();pile0=Math.PI} 
+  if (x==='bdplus'){if (decimales<8){decimales +=1}} 
+  if (x==='bdmoins'){if (decimales>0){decimales -=1}} 
+  
   
   clicBjaune=false; // raz touche jaune avant affichage pile
   affichagePile(); 
@@ -300,7 +302,9 @@ function boutonGris(x){
 
 function boutonBleu(x){
   // gestion des touches bleus, calculs
-  // alert(x+" "+clicBjaune)
+  
+  var r=0; // variable locale pour calculs
+  //alert ("bouton bleu")
   if (x==='/'){
     fEnter();
     r=pile1/pile0;
@@ -344,18 +348,20 @@ function boutonBleu(x){
   } 
   if (x==='TANATAN' && clicBjaune===false){
     fEnter();
-    if (Vdegrad==='DEG'){r=pile0/180*Math.PI}
-    else {r=pile0} 
+    if (Vdegrad==='DEG'){r=pile0/180*Math.PI} else {r=pile0} 
     r=Math.tan(r);
     if ((Math.abs(r)>maxNumber)||(Math.abs(r)>bigNumber)) {warning=listWarning[2];flagR=false} // gestion imprecision Math.tan
     else {pile0=r}
   }
-  if (x==='TANATAN' && clicBjaune===true){
+
+  if ((x==='TANATAN') && (clicBjaune===true)){
     fEnter();
+    alert("ATAN")
     r=Math.atan(pile0); // en radians
     if (Vdegrad==='DEG'){r=r/Math.PI*180}
     pile0=r;
   } 
+  
   if (x==='PWR'){
     fEnter();
     r=Math.pow(pile0,pile1);
@@ -398,15 +404,22 @@ function boutonBleu(x){
     else {pile0=r}
   }
   
-  clicBjaune=false; // raz touche jaune avant affichage pile
+  //alert(x+" , "+clicBjaune+" , "+pile0)
+  //clicBjaune=false; // raz touche jaune avant affichage pile
   affichagePile();
 
 } // fin de boutonBleu
 
 function boutonJaune(x){
   // gestion de la touche jaune
-  clicBjaune=true;
-  affichagePile(); 
+  warning=x;
+  
+  if (x==='bj') {
+  if (clicBjaune===false) {clicBjaune=true;}
+  else {clicBjaune=false}
+}
+  
+  affichageInfo(); 
 } // fin de boutonJaune
 
 // ----------------------------------------------------------
