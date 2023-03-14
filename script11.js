@@ -10,9 +10,9 @@ let titreBouton='',
   numerique='1234567890', // les caracteres numeriques
   bigNumber=1E10, // gestion imprecision calcul Math.tan
   maxNumber=9.99999999E99 // chiffre max affiché
-  espace=String.fromCharCode(160), //&nsp
+  //espace=String.fromCharCode(160), //&nsp
   fleche=String.fromCharCode(8594),
-  retLigne=String.fromCharCode(10),
+  //retLigne=String.fromCharCode(10),
   pile0=0, // valeurs numerique pile et mem
   pile1=0, // valeurs numerique pile et mem
   pile2=0, // valeurs numerique pile et mem
@@ -23,7 +23,7 @@ let titreBouton='',
   warning='',
   posentree='vide', // entree d'un nouveau nombre
   entree='',// affichage de l'entree
-  listWarning=['SCI','erreur','erreur','!'], // liste des message d'erreur
+  listWarning=['\u2794SCI','error','error','!','error'], // liste des message d'erreur
   zaff=""; // affichage des valeurs pile et mem
 let clicBjaune=false;// indicateur appui sur touche jaune
   
@@ -32,39 +32,8 @@ let clicBjaune=false;// indicateur appui sur touche jaune
 // pour lecture et modification des affichages et des boutons
 // ----------------------------------------------------------
 
-
-
-document.querySelectorAll('.bblanc').forEach(item => {
-  item.addEventListener('click', event => {    
-    const {target} = event;
-	titreBouton=target.textContent;
-	boutonBlanc(titreBouton);
-  })
-});
-
-document.querySelectorAll('.bgris').forEach(item => {
-  item.addEventListener('click', event => {    
-    const {target} = event;
-	titreBouton=target.id;
-	boutonGris(titreBouton);
-  })
-});
-
-document.querySelectorAll('.bbleu').forEach(item => {
-  item.addEventListener('click', event => {    
-    const {target} = event;
-	titreBouton=target.textContent;
-	boutonBleu(titreBouton);
-  })
-});
-
-document.querySelectorAll('.bjaune').forEach(item => {
-  item.addEventListener('click', event => {    
-    const {target} = event;
-	titreBouton=target.id;
-	boutonJaune(titreBouton);
-  })
-});
+ebdeg = document.getElementById("bdeg");
+ebdeg.addEventListener("click", boutonGris);
 
 docAjaune=document.getElementById("ajaune")
 docAstk=document.getElementById("astk")
@@ -77,7 +46,6 @@ docAdplusmoins = document.getElementById('adplusmoins');
 // ----------------------------------------------------------
 //              fonctions d'affichage et gestion
 // ----------------------------------------------------------
-
 
 function affichageInfo() {
   // mise a jour affichage infos modes 
@@ -115,7 +83,8 @@ function affichagePile(){
 
 function affichageInput(z){
   // affichage de x en mode entree
-  if (z===''){fDown();affichagePile()} // si entree '' sortie mode entree
+  if (z===''){affichagePile()} // si entree '' sortie mode entree
+  //if (z===''){fDown();affichagePile()} // si entree '' sortie mode entree
   else {
   l0=pile0.toFixed(decimales).length;// eval longueur max affichage
   l1=pile1.toFixed(decimales).length;// si sup 16 caracteres
@@ -192,8 +161,26 @@ function fEnter(){
 
 function boutonBlanc(x) {
   // gestion des touches blanches , entree d'un nombre
-  testposentree(entree); // valeur de posentree
-  xde0a9=numerique.includes(x); // x est un nombre si true
+  
+  testposentree(entree); // definit valeur de posentree
+  var valx=""; // valeur en caractere de l´id x 
+  
+  xde0a9=false;
+  
+  if (x==="b0") {xde0a9=true;valx="0"}
+  if (x==="b1") {xde0a9=true;valx="1"}
+  if (x==="b2") {xde0a9=true;valx="2"}
+  if (x==="b3") {xde0a9=true;valx="3"}
+  if (x==="b4") {xde0a9=true;valx="4"}
+  if (x==="b5") {xde0a9=true;valx="5"}
+  if (x==="b6") {xde0a9=true;valx="6"}
+  if (x==="b7") {xde0a9=true;valx="7"}
+  if (x==="b8") {xde0a9=true;valx="8"}
+  if (x==="b9") {xde0a9=true;valx="9"}
+  
+  if (x==="bmoins") {valx="-"}
+  if (x==="bpoint") {valx="."}
+  if (x==="be") {valx="E"}
   
   // si touche blanche pressee annule touche jaune
   clicBjaune=false; // raz touche jaune avant affichage pile
@@ -201,77 +188,77 @@ function boutonBlanc(x) {
   
   if (posentree==='full'){// nombre digits plein seuls AC et C sont possibles
     //if (x==='AC'){entree=''}
-    if (x==='C'){entree=entree.substr(0,entree.length-1)}
+    if (x==='bc'){entree=entree.substr(0,entree.length-1)}
     affichageInput(entree);
     return;}
   if (posentree==='vide'){ // premier digit, C et AC interdits
-    if (xde0a9===true) {entree=x}
-    if (x==='-') {entree=x}
-    if (x==='.') {entree='0.'}
-    if (x==='E') {entree='1.0E'}
+    if (xde0a9===true) {entree=valx}
+    if (x==='bmoins') {entree=valx}
+    if (x==='bpoint') {entree='0.'}
+    if (x==='be') {entree='1.0E'}
     if (entree!==''){fUp();affichagePile()}// decalage de pile
     affichageInput(entree);
     return;} 
   if (posentree==='ent1') { // partie entiere apres signe -
     //if (x==='AC'){entree=''}
-    if (x==='C'){entree=entree.substr(0,entree.length-1)}
-    if (x==='-') {return} // signe - uniquement en premiere position
-    if (x==='.') {entree=entree+'0.'}
-    if (x==='E') {entree=entree+'1.0E'}
-    if (xde0a9===true) {entree=entree+x}
+    if (x==='bc'){entree=entree.substr(0,entree.length-1)}
+    if (x==='bmoins') {return} // signe - uniquement en premiere position
+    if (x==='bpoint') {entree=entree+'0.'}
+    if (x==='be') {entree=entree+'1.0E'}
+    if (xde0a9===true) {entree=entree+valx}
     affichageInput(entree);
     return;}
   if (posentree==='ent2') { // partie entiere apres signe -
     //if (x==='AC'){entree=''}
-    if (x==='C'){entree=entree.substr(0,entree.length-1)}
-    if (x==='-') {return} // signe - uniquement en premiere position
-    if (x==='.') {entree=entree+x}
-    if (x==='E') {entree=entree+x}
-    if (xde0a9===true) {entree=entree+x}
+    if (x==='bc'){entree=entree.substr(0,entree.length-1)}
+    if (x==='bmoins') {return} // signe - uniquement en premiere position
+    if (x==='bpoint') {entree=entree+valx}
+    if (x==='be') {entree=entree+valx}
+    if (xde0a9===true) {entree=entree+valx}
     affichageInput(entree);
     return;}
   if (posentree==='dec'){ // partie decimale
     //if (x==='AC'){entree=''}
-    if (x==='C'){entree=entree.substr(0,entree.length-1)}
-    if (x==='-') {return} // signe - uniquement en premiere position
-    if (x==='.') {return}
-    if (x==='E') {entree=entree+x}
-    if (xde0a9===true) {entree=entree+x}
+    if (x==='bc'){entree=entree.substr(0,entree.length-1)}
+    if (x==='bmoins') {return} // signe - uniquement en premiere position
+    if (x==='bpoint') {return}
+    if (x==='be') {entree=entree+valx}
+    if (xde0a9===true) {entree=entree+valx}
     affichageInput(entree);
     return;}
   if (posentree==='exp1') { // premier digit de l exposant
     //if (x==='AC'){entree=''}
-    if (x==='C'){entree=entree.substr(0,entree.length-1)}
-    if (x==='-') {entree=entree+x}
-    if (x==='.') {return}
-    if (x==='E') {return}
-    if (xde0a9===true) {entree=entree+x}
+    if (x==='bc'){entree=entree.substr(0,entree.length-1)}
+    if (x==='bmoins') {entree=entree+valx}
+    if (x==='bpoint') {return}
+    if (x==='be') {return}
+    if (xde0a9===true) {entree=entree+valx}
     affichageInput(entree);
     return;}
   if (posentree==='exp2') { // deuxieme digit de l exposant
     //if (x==='AC'){entree=''}
-    if (x==='C'){entree=entree.substr(0,entree.length-1)}
-    if (x==='-') {return}
-    if (x==='.') {return}
-    if (x==='E') {return}
-    if (xde0a9===true) {entree=entree+x}
+    if (x==='bc'){entree=entree.substr(0,entree.length-1)}
+    if (x==='bmoins') {return}
+    if (x==='bpoint') {return}
+    if (x==='be') {return}
+    if (xde0a9===true) {entree=entree+valx}
     affichageInput(entree);
     return;}
   if (posentree==='exp3'){ // troisieme digit de l exposant
     //if (x==='AC'){entree=''}
-    if (x==='C'){entree=entree.substr(0,entree.length-1)}
-    if (x==='-') {return}
-    if (x==='.') {return}
-    if (x==='E') {return}
-    if (xde0a9===true) {entree=entree+x}
+    if (x==='bc'){entree=entree.substr(0,entree.length-1)}
+    if (x==='bmoins') {return}
+    if (x==='bpoint') {return}
+    if (x==='be') {return}
+    if (xde0a9===true) {entree=entree+valx}
     affichageInput(entree);
     return;}
   else {return}
+  
 } // fin de boutonBlanc
  
 function boutonGris(x){
   // gestion des boutons gris, gestion pile et autres
-  warning=x;
   
   var r=0;// variable locale pour calculs
   
@@ -279,14 +266,14 @@ function boutonGris(x){
     if (x==='bswap'){r=pile0;pile0=pile1;pile1=r}
     if (x==='bdup'){fUp();pile0=pile1}
     if (x==='bsto'){fEnter();mem=pile0}
-    if (x==='ddeg'){Vdegrad='DEG'} 
+    if (x==='bdeg'){Vdegrad='DEG'} 
     if (x==='bfix'){Vfixsci='FIX'} 
   }
   else { // partie basse du bouton
     if (x==='bswap'){fDown()} // drop
     if (x==='bdup'){fEnter();pile0=-pile0} // chs
     if (x==='bsto'){fEnter();fUp();pile0=mem} //rcl 
-    if (x==='bdeg'){Vdegrad='RAD'} // rad
+    if (x==='bdeg'){Vdegrad='RAD';warning=x} // rad
     if (x==='bfix'){Vfixsci='SCI'} // sci
   }
   
@@ -294,7 +281,6 @@ function boutonGris(x){
   if (x==='bpi'){fEnter();fUp();pile0=Math.PI} 
   if (x==='bdplus'){if (decimales<8){decimales +=1}} 
   if (x==='bdmoins'){if (decimales>0){decimales -=1}} 
-  
   
   clicBjaune=false; // raz touche jaune avant affichage pile
   affichagePile(); 
@@ -304,115 +290,125 @@ function boutonBleu(x){
   // gestion des touches bleus, calculs
   
   var r=0; // variable locale pour calculs
-  //alert ("bouton bleu")
-  if (x==='/'){
+  
+  if (x==='bdiv'){
     fEnter();
     r=pile1/pile0;
-    if (isNaN(r)) {warning=listWarning[1];flagR=false}
-    else if (Math.abs(r)>maxNumber) {warning=listWarning[2];flagR=false}
+    if (isNaN(r)) {warning=listWarning[4]} // erreur div par 0
+    else if (Math.abs(r)>maxNumber) {warning=listWarning[2]} // erreur max number
     else {pile1=r;fDown()}
     }
-  if (x==='x'){fEnter();pile1=pile1*pile0;fDown()}
-  if (x==='-'){fEnter();pile1=pile1-pile0;fDown()}
-  if (x==='+'){fEnter();pile1=pile1+pile0;fDown()}
+  if (x==='bmul'){fEnter();pile1=pile1*pile0;fDown()}
+  if (x==='bminu'){fEnter();pile1=pile1-pile0;fDown()}
+  if (x==='bplus'){fEnter();pile1=pile1+pile0;fDown()}
   
+  if (clicBjaune===false) { // partie haute du bouton
+    if (x==='bsin'){
+    fEnter();
+    if (Vdegrad==='DEG'){r=pile0/180*Math.PI}
+    else {r=pile0}
+    pile0=Math.sin(r); //  r en radians
+    }
+    
+    if (x==='bcos'){
+    fEnter();
+    if (Vdegrad==='DEG'){r=pile0/180*Math.PI}
+    else {r=pile0}
+    pile0=Math.cos(r); //  r en radians 
+    }
+    
+    if (x==='btan'){
+    fEnter();
+    if (Vdegrad==='DEG'){r=pile0/180*Math.PI} else {r=pile0} 
+    r=Math.tan(r);
+    if ((Math.abs(r)>maxNumber)||(Math.abs(r)>bigNumber)) {warning=listWarning[2]} // gestion imprecision Math.tan
+    else {pile0=r}
+    }
+    
+    if (x==='blog'){
+    fEnter();
+    r=Math.log10(pile0);
+    if (isNaN(r)) {warning=listWarning[1]} // val negative
+    if (Math.abs(r)>maxNumber) {warning=listWarning[2];flagR=false} // val 0
+    else {pile0=r}
+    }
+    
+    if (x==='bln'){
+    fEnter();
+    r=Math.log(pile0);
+    if (isNaN(r)) {warning=listWarning[1]} // val negative
+    if (Math.abs(r)>maxNumber) {warning=listWarning[2];flagR=false} // val 0
+    else {pile0=r}
+    }
+    
+    if (x==='bsqrt'){
+    fEnter();
+    r=Math.sqrt(pile0);
+    if (isNaN(r)) {warning=listWarning[1]} // val negative
+    else {pile0=r}
+    }
+  }
+  else { // partie basse du bouton
+    if (x==='bsin'){ // asin
+    fEnter();
+    r=Math.asin(pile0); // en radians
+    if (isNaN(r)) {warning=listWarning[2]} // val sup a 1 ou inf a -1
+    else {if (Vdegrad==='DEG'){r=r/Math.PI*180}; pile0=r}
+    }
+    
+    if (x==='bcos'){ // acos
+    fEnter();
+    r=Math.acos(pile0); // en radians
+    if (isNaN(r)) {warning=listWarning[1]} // val sup a 1 ou inf a -1
+    else {if (Vdegrad==='DEG'){r=r/Math.PI*180}; pile0=r}
+    } 
+  
+    if (x==='btan'){ // atan
+    fEnter();
+    //alert("ATAN")
+    r=Math.atan(pile0); // en radians
+    if (Vdegrad==='DEG'){r=r/Math.PI*180}
+    pile0=r;
+    } 
+  
+    if (x==='blog'){ // pwr
+    fEnter();
+    r=Math.pow(pile0,pile1);
+    if (Math.abs(r)>maxNumber) {warning=listWarning[2]}
+    else {pile1=r;fDown()}
+    }
+  
+    if (x==='bln'){ // exp
+    fEnter();
+    r=Math.exp(pile0);
+    if (Math.abs(r)>maxNumber) {warning=listWarning[2]}
+    else {pile0=r}
+    }
+  
+    if (x==='bsqrt'){ //x2
+    fEnter();
+    r=pile0*pile0;
+    if (Math.abs(r)>maxNumber) {warning=listWarning[2]}
+    else {pile0=r}
+    }
+  }
+  
+  /*
   if (x==='INV'){
     fEnter();
     r=1/pile0;
     if (Math.abs(r)>maxNumber) {warning=listWarning[2];flagR=false}
     else {pile0=r}
   }
-  if (x==='SINASIN' && clicBjaune===false){
-    fEnter();
-    if (Vdegrad==='DEG'){r=pile0/180*Math.PI}
-    else {r=pile0}
-    pile0=Math.sin(r); //  r en radians
-  }
-  if (x==='SINASIN' && clicBjaune===true){
-    fEnter();
-    r=Math.asin(pile0); // en radians
-    if (isNaN(r)) {warning=listWarning[2];flagR=false} // val sup a 1 ou inf a -1
-    else {if (Vdegrad==='DEG'){r=r/Math.PI*180}; pile0=r}
-    }
-  if (x==='COSACOS' && clicBjaune===false){
-    fEnter();
-    if (Vdegrad==='DEG'){r=pile0/180*Math.PI}
-    else {r=pile0}
-    pile0=Math.cos(r); //  r en radians
-  }
-  if (x==='COSACOS' && clicBjaune===true){
-    fEnter();
-    r=Math.acos(pile0); // en radians
-    if (isNaN(r)) {warning=listWarning[1];flagR=false} // val sup a 1 ou inf a -1
-    else {if (Vdegrad==='DEG'){r=r/Math.PI*180}; pile0=r}
-  } 
-  if (x==='TANATAN' && clicBjaune===false){
-    fEnter();
-    if (Vdegrad==='DEG'){r=pile0/180*Math.PI} else {r=pile0} 
-    r=Math.tan(r);
-    if ((Math.abs(r)>maxNumber)||(Math.abs(r)>bigNumber)) {warning=listWarning[2];flagR=false} // gestion imprecision Math.tan
-    else {pile0=r}
-  }
-
-  if ((x==='TANATAN') && (clicBjaune===true)){
-    fEnter();
-    alert("ATAN")
-    r=Math.atan(pile0); // en radians
-    if (Vdegrad==='DEG'){r=r/Math.PI*180}
-    pile0=r;
-  } 
+  */ 
   
-  if (x==='PWR'){
-    fEnter();
-    r=Math.pow(pile0,pile1);
-    if (Math.abs(r)>maxNumber) {warning=listWarning[2];flagR=false}
-    else {pile1=r;fDown()}
-  }
-  if (x==='LNe^x' && clicBjaune===false){
-    fEnter();
-    r=Math.log(pile0);
-    if (isNaN(r)) {warning=listWarning[1];flagR=false} // val negative
-    if (Math.abs(r)>maxNumber) {warning=listWarning[2];flagR=false} // val 0
-    else {pile0=r}
-  }
-  if (x==='LNe^x' && clicBjaune===true){
-    fEnter();
-    r=Math.exp(pile0);
-    if (Math.abs(r)>maxNumber) {warning=listWarning[2];flagR=false}
-    else {pile0=r}
-  }
-  
-  if (x==='LOG'){
-    fEnter();
-    r=Math.log10(pile0);
-    if (isNaN(r)) {warning=listWarning[1];flagR=false} // val negative
-    if (Math.abs(r)>maxNumber) {warning=listWarning[2];flagR=false} // val 0
-    else {pile0=r}
-  }
-  
-  if (x==='SQRTx^2' && clicBjaune===false){
-    //alert (x);
-    fEnter();
-    r=Math.sqrt(pile0);
-    if (isNaN(r)) {warning=listWarning[1];flagR=false} // val negative
-    else {pile0=r}
-  }
-  if (x==='SQRTx^2'&& clicBjaune===true){
-    fEnter();
-    r=pile0*pile0;
-    if (Math.abs(r)>maxNumber) {warning=listWarning[2];flagR=false}
-    else {pile0=r}
-  }
-  
-  //alert(x+" , "+clicBjaune+" , "+pile0)
-  //clicBjaune=false; // raz touche jaune avant affichage pile
+  clicBjaune=false; // raz touche jaune avant affichage pile
   affichagePile();
 
 } // fin de boutonBleu
 
 function boutonJaune(x){
   // gestion de la touche jaune
-  warning=x;
   
   if (x==='bj') {
   if (clicBjaune===false) {clicBjaune=true;}

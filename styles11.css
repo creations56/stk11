@@ -17,7 +17,7 @@ a{
 }
 
 .cadre {
- width:350px;
+ width:340px;
  text-align: center;
  background-color: #505050;
  justify-content: center;/*centrage dans la boite*/
@@ -147,15 +147,8 @@ button{
 #bsin{grid-column: 2;grid-row: 5;}
 #bcos{grid-column: 3;grid-row: 5;}
 #btan{grid-column: 4;grid-row: 5;}
-#bln{grid-column: ;grid-row: 5;}
+#bln{grid-column: 1;grid-row: 5;}
 #bsqrt{grid-column: 5;grid-row: 5;}
-#basin{grid-column: 1;grid-row: 5;}
-#bacos{grid-column: 2;grid-row: 5;}
-#batan{grid-column: 3;grid-row: 5;}
-#bpwr{grid-column: 4;grid-row: 5;}
-#bexp{grid-column: 5;grid-row: 5;}
-#bx2{grid-column: 6;grid-row: 5;}
-#bchs{grid-column: 7;grid-row: 5;}
 
 #benter{grid-column: 4/6;grid-row: 6;}
 #bswap{grid-column: 3;grid-row: 6}
@@ -178,8 +171,6 @@ button{
 #b2{grid-column: 2;grid-row: 9;}
 #b3{grid-column: 3;grid-row: 9;}
 #bmoins{grid-column: 4;grid-row: 9;)}
-#bdrop{grid-column: 6;grid-row: 9;}
-#brcl{grid-column: 5;grid-row: 9;}
 #bmul{grid-column: 5;grid-row: 9;background: linear-gradient(to bottom, #66a3ff, #0047b3); color:white;/*remplace la valeur class*/}
 
 #b0{grid-column: 1;grid-row: 10;height: 45px;} 
